@@ -1,47 +1,48 @@
-package example.repository;
+package spring.repository;
 
-import example.model.Project;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
+import spring.model.TaskReport;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class ProjectRepository {
+public class TaskReportRepository {
     private final SessionFactory sessionFactory;
 
-    public ProjectRepository(SessionFactory sessionFactory) {
+    public TaskReportRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
-    public Project save(Project project) {
+    public TaskReport save(TaskReport taskReport) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
-            session.merge(project);
+            session.merge(taskReport);
             session.getTransaction().commit();
-            return project;
+            return taskReport;
         }
     }
 
-    public List<Project> findAll() {
+    public List<TaskReport> findAll() {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("from Project", Project.class).list();
+            return session.createQuery("from TaskReport", TaskReport.class).list();
         }
     }
 
-    public Optional<Project> findById(Long id) {
+    public Optional<TaskReport> findById(Long id) {
         try (Session session = sessionFactory.openSession()) {
-            Project account = session.get(Project.class, id);
-            return Optional.ofNullable(account);
+            TaskReport taskReport = session.get(TaskReport.class, id);
+            return Optional.ofNullable(taskReport);
         }
     }
 
-    public void updateProject(Project project) {
+    public void updateTaskReport(TaskReport taskReport) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
-            session.merge(project);
+            session.merge(taskReport);
             session.getTransaction().commit();
         }
     }
@@ -49,9 +50,9 @@ public class ProjectRepository {
     public void deleteById(Long id) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
-            Project account = session.get(Project.class, id);
-            if (account != null) {
-                session.remove(account);
+            TaskReport taskReport = session.get(TaskReport.class, id);
+            if (taskReport != null) {
+                session.remove(taskReport);
             }
             session.getTransaction().commit();
         }
@@ -59,8 +60,8 @@ public class ProjectRepository {
 
     public boolean existsById(Long id) {
         try (Session session = sessionFactory.openSession()) {
-            Project account = session.get(Project.class, id);
-            return account != null;
+            TaskReport taskReport = session.get(TaskReport.class, id);
+            return taskReport != null;
         }
     }
 }
