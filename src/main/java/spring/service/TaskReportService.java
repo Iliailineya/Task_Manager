@@ -2,7 +2,7 @@ package spring.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import spring.exception.EntityNotFoundException;
+import spring.exception.TaskReportNotFoundException;
 import spring.model.TaskReport;
 import spring.repository.TaskReportRepository;
 
@@ -19,7 +19,7 @@ public class TaskReportService {
 
     public TaskReport getTaskReportById(long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("TaskReport with id " + id + " not found"));
+                .orElseThrow(() -> new TaskReportNotFoundException("TaskReport with id " + id + " not found"));
     }
 
     public List<TaskReport> getAllTaskReports() {
@@ -31,7 +31,7 @@ public class TaskReportService {
             taskReport.setId(id);
             return repository.save(taskReport);
         } else {
-            throw new EntityNotFoundException("TaskReport with id " + id + " not found");
+            throw new TaskReportNotFoundException("TaskReport with id " + id + " not found");
         }
     }
 
@@ -39,7 +39,7 @@ public class TaskReportService {
         if (repository.existsById(id)) {
             repository.deleteById(id);
         } else {
-            throw new EntityNotFoundException("TaskReport with id " + id + " not found");
+            throw new TaskReportNotFoundException("TaskReport with id " + id + " not found");
         }
     }
 }

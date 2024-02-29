@@ -1,6 +1,6 @@
 package spring.service;
 
-import spring.exception.EntityNotFoundException;
+import spring.exception.ProjectNotFoundException;
 import spring.model.Project;
 import spring.repository.ProjectRepository;
 import lombok.AllArgsConstructor;
@@ -19,7 +19,7 @@ public class ProjectService {
 
     public Project getProjectById(long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Project with id " + id + " not found"));
+                .orElseThrow(() -> new ProjectNotFoundException("Project with id " + id + " not found"));
     }
 
     public List<Project> getAllProjects() {
@@ -32,7 +32,7 @@ public class ProjectService {
             repository.save(project);
             return project;
         } else {
-            throw new EntityNotFoundException("Project with id " + id + " not found");
+            throw new ProjectNotFoundException("Project with id " + id + " not found");
         }
     }
 
@@ -40,7 +40,7 @@ public class ProjectService {
         if (repository.existsById(id)) {
             repository.deleteById(id);
         } else {
-            throw new EntityNotFoundException("Project with id " + id + " not found");
+            throw new ProjectNotFoundException("Project with id " + id + " not found");
         }
     }
 }
