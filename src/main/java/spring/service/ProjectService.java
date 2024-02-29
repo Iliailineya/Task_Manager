@@ -1,8 +1,8 @@
-package example.service;
+package spring.service;
 
-import example.exception.ProjectNotFoundException;
-import example.model.Project;
-import example.repository.ProjectRepository;
+import spring.exception.EntityNotFoundException;
+import spring.model.Project;
+import spring.repository.ProjectRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,13 +13,13 @@ import java.util.List;
 public class ProjectService {
     private final ProjectRepository repository;
 
-    public Project createProject(Project account) {
-        return repository.save(account);
+    public Project createProject(Project project) {
+        return repository.save(project);
     }
 
     public Project getProjectById(long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ProjectNotFoundException("Project with id " + id + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Project with id " + id + " not found"));
     }
 
     public List<Project> getAllProjects() {
@@ -29,10 +29,10 @@ public class ProjectService {
     public Project updateProject(long id, Project project) {
         if (repository.existsById(id)) {
             project.setId(id);
-            repository.updateProject(project);
+            repository.save(project);
             return project;
         } else {
-            throw new ProjectNotFoundException("Account with id " + id + " not found");
+            throw new EntityNotFoundException("Project with id " + id + " not found");
         }
     }
 
@@ -40,7 +40,7 @@ public class ProjectService {
         if (repository.existsById(id)) {
             repository.deleteById(id);
         } else {
-            throw new ProjectNotFoundException("Account with id " + id + " not found");
+            throw new EntityNotFoundException("Project with id " + id + " not found");
         }
     }
 }
