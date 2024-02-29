@@ -1,10 +1,11 @@
-package example.configuration;
+package spring.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
@@ -15,8 +16,9 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
-@ComponentScan(value = "example.spring")
+@ComponentScan(value = "spring")
 @EnableWebMvc
+@EnableJpaRepositories(value = "spring")
 @PropertySource("src/main/resources/app.properties")
 @EnableTransactionManagement
 public class AppConfig {
@@ -27,10 +29,10 @@ public class AppConfig {
     }
 
     @Bean
-    public LocalSessionFactoryBean sessionFactory() {
+    public LocalSessionFactoryBean entityManagerFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan("example.spring.model");
+        sessionFactory.setPackagesToScan("spring.model");
         sessionFactory.setHibernateProperties(hibernateProperties());
         return sessionFactory;
     }
@@ -38,11 +40,15 @@ public class AppConfig {
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(environment.getRequiredProperty("db.driverClassName"));
-        dataSource.setUrl(environment.getRequiredProperty("db.url"));
-        dataSource.setUsername(environment.getRequiredProperty("db.username"));
-        dataSource.setPassword(environment.getRequiredProperty("db.password"));
-        return dataSource;
+        try {
+            dataSource.setDriverClassName(environment.getRequiredProperty("db.driverClassName"));
+            dataSource.setUrl(environment.getRequiredProperty("db.url"));
+            dataSource.setUsername(environment.getRequiredProperty("db.username"));
+            dataSource.setPassword(environment.getRequiredProperty("db.password"));
+            return dataSource;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to configure DataSource", e);
+        }
     }
 
     private Properties hibernateProperties() {
@@ -55,9 +61,9 @@ public class AppConfig {
     }
 
     @Bean
-    public HibernateTransactionManager getTransactionManager() {
+    public HibernateTransactionManager transactionManager() {
         HibernateTransactionManager transactionManager = new HibernateTransactionManager();
-        transactionManager.setSessionFactory(sessionFactory().getObject());
+        transactionManager.setSessionFactory(entityManagerFactory().getObject());
         return transactionManager;
     }
 }
