@@ -27,12 +27,9 @@ public class TaskService {
     }
 
     public Task updateTask(long id, Task task) {
-        if (repository.existsById(id)) {
-            task.setId(id);
-            return repository.save(task);
-        } else {
-            throw new TaskNotFoundException("Task with id " + id + " not found");
-        }
+        getTaskById(id);
+        task.setId(id);
+        return repository.save(task);
     }
 
     public void deleteTaskById(long id) {

@@ -27,12 +27,9 @@ public class TaskReportService {
     }
 
     public TaskReport updateTaskReport(long id, TaskReport taskReport) {
-        if (repository.existsById(id)) {
-            taskReport.setId(id);
-            return repository.save(taskReport);
-        } else {
-            throw new TaskReportNotFoundException("TaskReport with id " + id + " not found");
-        }
+        getTaskReportById(id);
+        taskReport.setId(id);
+        return repository.save(taskReport);
     }
 
     public void deleteTaskReportById(long id) {

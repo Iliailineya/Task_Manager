@@ -27,13 +27,9 @@ public class ProjectService {
     }
 
     public Project updateProject(long id, Project project) {
-        if (repository.existsById(id)) {
-            project.setId(id);
-            repository.save(project);
-            return project;
-        } else {
-            throw new ProjectNotFoundException("Project with id " + id + " not found");
-        }
+        getProjectById(id);
+        project.setId(id);
+        return repository.save(project);
     }
 
     public void deleteProjectById(long id) {
