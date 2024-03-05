@@ -1,10 +1,11 @@
 package spring.service;
 
-import spring.exception.ProjectNotFoundException;
-import spring.model.Project;
-import spring.repository.ProjectRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import spring.exception.ProjectNotFoundException;
+import spring.model.Project;
+import spring.model.dto.ProjectDTO;
+import spring.repository.ProjectRepository;
 
 import java.util.List;
 
@@ -13,8 +14,13 @@ import java.util.List;
 public class ProjectService {
     private final ProjectRepository repository;
 
-    public Project createProject(Project project) {
-        return repository.save(project);
+    public Long createProject(ProjectDTO projectDTO) {
+        Project project = new Project();
+        project.setName(projectDTO.getName());
+        project.setDescription(projectDTO.getDescription());
+        project.setStartDate(projectDTO.getStartDate());
+        project.setEndDate(projectDTO.getEndDate());
+        return repository.save(project).getId();
     }
 
     public Project getProjectById(long id) {
@@ -26,9 +32,13 @@ public class ProjectService {
         return repository.findAll();
     }
 
-    public Project updateProject(long id, Project project) {
-        getProjectById(id);
-        return repository.save(project);
+    public Long updateProject(long id, ProjectDTO projectDTO) {
+        Project project = getProjectById(id);
+        project.setName(projectDTO.getName());
+        project.setDescription(projectDTO.getDescription());
+        project.setStartDate(projectDTO.getStartDate());
+        project.setEndDate(projectDTO.getEndDate());
+        return repository.save(project).getId();
     }
 
     public void deleteProjectById(long id) {

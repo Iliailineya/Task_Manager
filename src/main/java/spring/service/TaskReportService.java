@@ -3,7 +3,9 @@ package spring.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import spring.exception.TaskReportNotFoundException;
+import spring.model.Task;
 import spring.model.TaskReport;
+import spring.model.dto.TaskReportDTO;
 import spring.repository.TaskReportRepository;
 
 import java.util.List;
@@ -11,29 +13,37 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class TaskReportService {
-    private final TaskReportRepository repository;
+    private final TaskReportRepository taskReportRepository;
+    private final TaskService taskService;
 
-    public TaskReport createTaskReport(TaskReport taskReport) {
-        return repository.save(taskReport);
+    public Long createTaskReport(TaskReportDTO taskReportDTO) {
+        TaskReport taskReport = new TaskReport();
+        Task task = taskService.getTaskById(taskReportDTO.getTaskId());
+        taskReport.setTask(task);
+        taskReport.setDescription(taskReportDTO.getDescription());
+        taskReport.setCompletionDate(taskReportDTO.getCompletionDate());
+        return taskReportRepository.save(taskReport).getId();
     }
 
     public TaskReport getTaskReportById(long id) {
-        return repository.findById(id)
+        return taskReportRepository.findById(id)
                 .orElseThrow(() -> new TaskReportNotFoundException("TaskReport with id " + id + " not found"));
     }
 
     public List<TaskReport> getAllTaskReports() {
-        return repository.findAll();
+        return taskReportRepository.findAll();
     }
 
-    public TaskReport updateTaskReport(long id, TaskReport taskReport) {
-        getTaskReportById(id);
-        return repository.save(taskReport);
+    public Long updateTaskReport(long id, TaskReportDTO taskReportDTO) {
+        TaskReport taskReport = getTaskReportById(id);
+        taskReport.setDescription(taskReportDTO.getDescription());
+        taskReport.setCompletionDate(taskReportDTO.getCompletionDate());
+        return taskReportRepository.save(taskReport).getId();
     }
 
     public void deleteTaskReportById(long id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
+        if (taskReportRepository.existsById(id)) {
+            taskReportRepository.deleteById(id);
         } else {
             throw new TaskReportNotFoundException("TaskReport with id " + id + " not found");
         }
