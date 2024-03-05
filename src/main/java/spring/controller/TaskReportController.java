@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import spring.model.TaskReport;
+import spring.model.dto.TaskReportDTO;
 import spring.service.TaskReportService;
 
 import java.util.List;
@@ -11,18 +12,17 @@ import java.util.List;
 @SuppressWarnings("unused")
 @RestController
 @RequestMapping("/api/task-reports")
-public class TaskReportRestController {
+public class TaskReportController {
 
     private final TaskReportService taskReportService;
 
-    public TaskReportRestController(TaskReportService taskReportService) {
+    public TaskReportController(TaskReportService taskReportService) {
         this.taskReportService = taskReportService;
     }
 
-    @PostMapping("/post")
-    public ResponseEntity<TaskReport> createTaskReport(@RequestBody TaskReport taskReport) {
-        TaskReport createdTaskReport = taskReportService.createTaskReport(taskReport);
-        return new ResponseEntity<>(createdTaskReport, HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<Long> createTaskReport(@RequestBody TaskReportDTO taskReportDTO) {
+        return new ResponseEntity<>(taskReportService.createTaskReport(taskReportDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
@@ -38,9 +38,8 @@ public class TaskReportRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TaskReport> updateTaskReport(@PathVariable long id, @RequestBody TaskReport taskReportDetails) {
-        TaskReport updatedTaskReport = taskReportService.updateTaskReport(id, taskReportDetails);
-        return ResponseEntity.ok(updatedTaskReport);
+    public ResponseEntity<Long> updateTaskReport(@PathVariable long id, @RequestBody TaskReportDTO taskReportDetails) {
+        return ResponseEntity.ok(taskReportService.updateTaskReport(id, taskReportDetails));
     }
 
     @DeleteMapping("/{id}")

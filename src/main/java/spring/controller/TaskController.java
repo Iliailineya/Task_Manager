@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import spring.model.Task;
+import spring.model.dto.TaskDTO;
 import spring.service.TaskService;
 
 import java.util.List;
@@ -11,18 +12,17 @@ import java.util.List;
 @SuppressWarnings("unused")
 @RestController
 @RequestMapping("/api/tasks")
-public class TaskRestController {
+public class TaskController {
 
     private final TaskService taskService;
 
-    public TaskRestController(TaskService taskService) {
+    public TaskController(TaskService taskService) {
         this.taskService = taskService;
     }
 
-    @PostMapping("/post")
-    public ResponseEntity<Task> createTask(@RequestBody Task task) {
-        Task createdTask = taskService.createTask(task);
-        return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<Long> createTask(@RequestBody TaskDTO taskDTO) {
+        return new ResponseEntity<>(taskService.createTask(taskDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
@@ -38,9 +38,8 @@ public class TaskRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable long id, @RequestBody Task taskDetails) {
-        Task updatedTask = taskService.updateTask(id, taskDetails);
-        return ResponseEntity.ok(updatedTask);
+    public ResponseEntity<Long> updateTask(@PathVariable long id, @RequestBody TaskDTO taskDetails) {
+        return ResponseEntity.ok(taskService.updateTask(id, taskDetails));
     }
 
     @DeleteMapping("/{id}")
