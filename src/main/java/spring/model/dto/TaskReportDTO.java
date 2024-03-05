@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TaskReportDTO {
+    private Long taskId;
     private LocalDate completionDate;
     @NotBlank
     private String description;
