@@ -28,7 +28,6 @@ public class TaskReportService {
 
     public TaskReport updateTaskReport(long id, TaskReport taskReport) {
         getTaskReportById(id);
-        taskReport.setId(id);
         return repository.save(taskReport);
     }
 

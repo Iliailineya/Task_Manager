@@ -28,7 +28,6 @@ public class ProjectService {
 
     public Project updateProject(long id, Project project) {
         getProjectById(id);
-        project.setId(id);
         return repository.save(project);
     }
 

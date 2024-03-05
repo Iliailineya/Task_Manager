@@ -28,7 +28,6 @@ public class TaskService {
 
     public Task updateTask(long id, Task task) {
         getTaskById(id);
-        task.setId(id);
         return repository.save(task);
     }
 
