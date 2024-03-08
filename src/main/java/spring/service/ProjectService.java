@@ -42,10 +42,7 @@ public class ProjectService {
     }
 
     public void deleteProjectById(long id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-        } else {
-            throw new ProjectNotFoundException("Project with id " + id + " not found");
-        }
+        getProjectById(id);
+        repository.deleteById(id);
     }
 }

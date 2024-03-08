@@ -42,10 +42,7 @@ public class TaskReportService {
     }
 
     public void deleteTaskReportById(long id) {
-        if (taskReportRepository.existsById(id)) {
-            taskReportRepository.deleteById(id);
-        } else {
-            throw new TaskReportNotFoundException("TaskReport with id " + id + " not found");
-        }
+        getTaskReportById(id);
+        taskReportRepository.deleteById(id);
     }
 }
